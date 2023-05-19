@@ -56,7 +56,9 @@ VALUES
 
 ---- SOLUTIONS ----
 
+-------------------------------------------------------------------------
 ---- Q1: What is the total amount each customer spent at the restaurant?
+-------------------------------------------------------------------------
 
 SELECT
     sales.customer_id,
@@ -74,7 +76,9 @@ GROUP BY sales.customer_id
 -- Optional sort on the resultant data.
 ORDER BY  sales.customer_id, TotalSpent DESC;
 
+-------------------------------------------------------------------------
 ---- Q2: How many days has each customer visited the restaurant?
+-------------------------------------------------------------------------
 
 SELECT
     sales.customer_id,
@@ -87,7 +91,9 @@ GROUP BY sales.customer_id
 -- Optional order the data by days_visited
 ORDER BY days_visited DESC
 
+-------------------------------------------------------------------------
 ---- Q3. What was the first item from the menu purchased by each customer?
+-------------------------------------------------------------------------
 
 -- There are probably a number of ways to do this, but CTEs is one useful way.
 -- Common Table Expressions (CTEs) work as virtual tables (with records and columns), created during the execution of a query, used by the query, and eliminated after query execution.
