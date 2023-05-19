@@ -61,7 +61,7 @@ VALUES
 SELECT
     sales.customer_id,
     -- Multiply product number by its price and then sum all the values.
-    Sum(sales.product_id * menu.price) AS TotalSpent 
+    Sum(menu.price) AS TotalSpent 
 -- join the menu and sales data tables together.
 FROM dannys_diner.menu
 INNER JOIN dannys_diner.sales
