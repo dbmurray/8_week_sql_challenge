@@ -101,21 +101,22 @@ ORDER BY days_visited DESC
 
 WITH ranked_orders_cte AS
 (
-   SELECT	customer_id, 
-  			order_date, 
-  			product_name, 
-  			a.product_id,
+SELECT
+    customer_id, 
+    order_date, 
+  	product_name, 
+  	a.product_id,
   
   -- DENSE_RANK is a windows function that ranks a SET of data by a set of ordering variables
   -- If a value is the same, they receive the same rank (key difference to a normal RANK())
   -- In our case we want to do a dense rank of customers by the date they made orders (ascending)
   -- PARTITION BY tells the DENSE_RANK function to calculate over Customer IDs. 
   
-      		DENSE_RANK() OVER(PARTITION BY a.customer_id
-              ORDER BY a.order_date) AS ranked_products
-   FROM dannys_diner.sales AS a
-   JOIN dannys_diner.menu AS b
-      ON a.product_id = b.product_id
+    DENSE_RANK() OVER(PARTITION BY a.customer_id
+    ORDER BY a.order_date) AS ranked_products
+ FROM dannys_diner.sales AS a
+ JOIN dannys_diner.menu AS b
+    ON a.product_id = b.product_id
 )
 
 -- The CTE above essentially outputs order dates for each customer with 1 being the earliest order.
