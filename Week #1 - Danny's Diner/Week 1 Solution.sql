@@ -74,7 +74,7 @@ ON dannys_diner.sales.product_id = dannys_diner.menu.product_id
 -- So we are summing up the TOTAL SPENT for each Customer_Id
 GROUP BY sales.customer_id
 -- Optional sort on the resultant data.
-ORDER BY  sales.customer_id, TotalSpent DESC;
+ORDER BY  sales.customer_id, TotalSpent DESC
 
 -------------------------------------------------------------------------
 ---- Q2: How many days has each customer visited the restaurant?
@@ -125,12 +125,27 @@ SELECT
 SELECT customer_id, product_id, product_name
 FROM ranked_orders_cte
 WHERE ranked_products = 1
-GROUP BY customer_id, product_name, product_id;
+GROUP BY customer_id, product_name, product_id
 
 ----------------------------------------------------------------------------------------------------------
 ---- Q4. What is the most purchased item on the menu and how many times was it purchased by all customers?
 -----------------------------------------------------------------------------------------------------------
 
+-- This is a fairly straightforward query. We just need to count the number of sales of eahc product and order
+-- them correctly. We'll also bring in the product name so the output is a bit more comprehensible. 
+
+SELECT
+  	b.product_name, 
+    -- Let's use a COUNT aggregate function to get a count of eahc products sale.
+    count(a.product_id) AS product_sales
+FROM dannys_diner.sales a
+INNER JOIN dannys_diner.menu b
+ON a.product_id = b.product_id
+GROUP BY b.product_name, a.product_id
+-- Order the data descendingly
+ORDER BY product_sales desc
+-- Only need the top row, so we can use a LIMIT function.
+LIMIT 1
 
 -----------------------------------------------------------
 ---- Q5. Which item was the most popular for each customer?
