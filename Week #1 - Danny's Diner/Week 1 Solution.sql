@@ -127,4 +127,16 @@ FROM ranked_orders_cte
 WHERE ranked_products = 1
 GROUP BY customer_id, product_name, product_id;
 
+----------------------------------------------------------------------------------------------------------
+---- Q4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+-----------------------------------------------------------------------------------------------------------
 
+
+-----------------------------------------------------------
+---- Q5. Which item was the most popular for each customer?
+-----------------------------------------------------------
+
+
+-----------------------------------------------------------------------------------
+---- Q6. Which item was purchased first by the customer after they became a member?
+-----------------------------------------------------------------------------------
