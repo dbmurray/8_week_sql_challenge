@@ -152,6 +152,59 @@ LIMIT 1
 -----------------------------------------------------------
 
 
+-- AGain, a Common Table Expression comes in very handy for completeing this task. We use the CTE to find the rank of menu item counts per customer. 
+-- Remmeber, Common Table Expressions (CTEs) work as virtual tables (with records and columns), created during the execution of a query, used by the query, and eliminated after query execution.
+-- In our solution we want to create a temporary table that ranks the products bought by each customer in terms of the DATE it was bought. 
+
+
+WITH customer_favourite AS (
+  SELECT 
+    sales.customer_id, 
+    menu.product_name, 
+    -- count the number of orders by menu item for each customer and rank them in terms of most popular (with rank 1 = most ordered)
+    COUNT(menu.product_id) AS order_count,
+    DENSE_RANK() OVER(
+      PARTITION BY sales.customer_id 
+      ORDER BY COUNT(sales.customer_id) DESC) AS rank
+  FROM dannys_diner.menu
+  JOIN dannys_diner.sales
+    ON menu.product_id = sales.product_id
+  GROUP BY sales.customer_id, menu.product_name
+)
+
+-- now we just select the required fields where rank = 1. Note that some customers have some products with equal rank. 
+SELECT 
+  customer_id, 
+  product_name, 
+  order_count
+FROM customer_favourite 
+WHERE rank = 1;
+
 -----------------------------------------------------------------------------------
 ---- Q6. Which item was purchased first by the customer after they became a member?
 -----------------------------------------------------------------------------------
+-- Again, we're in CTE world. 
+
+WITH purchased_post_membership AS (
+  SELECT 
+    members.customer_id, 
+    sales.product_id,
+    ROW_NUMBER() OVER(
+       PARTITION BY members.customer_id
+       ORDER BY sales.order_date DESC) AS rank
+  FROM dannys_diner.members
+  JOIN dannys_diner.sales
+    ON members.customer_id = sales.customer_id
+    AND sales.order_date < members.join_date
+)
+
+
+-- Now we can use this CTE in a join expression. 
+SELECT 
+  p_member.customer_id, 
+  menu.product_name 
+FROM purchased_post_membership AS p_member
+JOIN dannys_diner.menu
+  ON p_member.product_id = menu.product_id
+WHERE rank = 1
+ORDER BY p_member.customer_id ASC;
